@@ -1,4 +1,4 @@
-package proxmox_ssh_key
+package main
 
 import (
 	"bufio"
