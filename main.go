@@ -43,6 +43,9 @@ func main()  {
 			n.ip = append(n.ip, net.ParseIP(string(scanner.Bytes())[16:]))
 		}
 	}
-	fmt.Println(n.hostname[1])
-	fmt.Println(n.ip)
+	j := 1
+	for i := 0; i < len(n.hostname); i++ {
+		fmt.Printf("node %d -- %s, and its ip address is %v\n", j, n.hostname[i], n.ip[i])
+		j++
+	}
 }
