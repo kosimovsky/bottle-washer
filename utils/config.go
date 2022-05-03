@@ -19,9 +19,9 @@ type AuthConf struct {
 
 func (ac *AuthConf) ReadAuthFile() {
 	cfg := cmd.CfgFile
-	file, err := ioutil.ReadFile(*cfg)
+	file, err := ioutil.ReadFile(cfg)
 	if err != nil {
-		log.Printf("couldn't read file: %s", *cfg)
+		log.Printf("couldn't read file: %s", cfg)
 	}
 	err = yaml.Unmarshal(file, ac)
 	if err != nil {

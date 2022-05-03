@@ -1,0 +1,5 @@
+.idea/
+bottle-washer
+go.mod
+go.sum
+*.yaml

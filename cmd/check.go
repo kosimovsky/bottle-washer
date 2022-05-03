@@ -5,7 +5,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"bottle-washer/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +20,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Check(&CfgFile, args)
+		//utils.Check(CfgFile, args)
 	},
 }
 
