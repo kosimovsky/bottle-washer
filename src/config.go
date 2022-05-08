@@ -1,3 +1,8 @@
+// Package src
+/*
+Copyright © 2022 Alexander Kosimovsky a.kosimovsky@gmail.com
+
+*/
 package src
 
 import (
@@ -18,6 +23,8 @@ type AuthConf struct {
 }
 
 var CfgFile string
+
+const Logfile = "bottle-washer.log"
 
 func (ac *AuthConf) ReadAuthFile() {
 	cfg := CfgFile

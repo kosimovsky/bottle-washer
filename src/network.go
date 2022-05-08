@@ -1,7 +1,13 @@
+// Package src
+/*
+Copyright © 2022 Alexander Kosimovsky a.kosimovsky@gmail.com
+
+*/
 package src
 
 import (
 	"fmt"
+	"log"
 	"net"
 	"net/netip"
 	"os"
@@ -60,6 +66,7 @@ func tryHost(reqChan <-chan netip.Addr, resChan chan<- alive) {
 		_, err := net.DialTimeout("tcp4", ipPort, 3*time.Second)
 		if err != nil {
 			avlbl = false
+			log.Println(err.Error())
 		} else {
 			avlbl = true
 		}
@@ -126,13 +133,13 @@ func Check(c Client, args []string) {
 		case "cidr":
 			ar, err := CheckAlivesInCidr(args[2])
 			if err != nil {
-				fmt.Println(err.Error())
+				log.Println(err.Error())
 			}
 			printAddr(ar)
 		}
 	} else {
 		err := fmt.Errorf("%s command need subcommand, args count %d", "connect", len(args))
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 	}
 	defer c.ApiClient.Logout()
 }

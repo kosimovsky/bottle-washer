@@ -1,5 +1,6 @@
+// Package cmd
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 Alexander Kosimovsky a.kosimovsky@gmail.com
 
 */
 package cmd
