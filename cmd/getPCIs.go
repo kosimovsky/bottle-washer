@@ -8,6 +8,7 @@ package cmd
 import (
 	"bottle-washer/src"
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 // getPCIsCmd represents the getPCIs command
@@ -19,7 +20,26 @@ pci list all		-- to get what in pci slots
 pci list endpoints	-- to get PCI RedFish API endpoints`,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		src.Pci(&CfgFile, args)
+		var ac src.AuthConf
+		ac.ReadAuthFile()
+		configs := ac.ClientConfig()
+		clients := make(chan src.Client)
+		var wg sync.WaitGroup
+		go func() {
+			for _, conf := range configs {
+				clients <- src.InitClientWConfig(conf)
+			}
+			close(clients)
+		}()
+
+		for client := range clients {
+			wg.Add(1)
+			go func(c src.Client) {
+				defer wg.Done()
+				src.Pci(c, args)
+			}(client)
+		}
+		wg.Wait()
 	},
 }
 

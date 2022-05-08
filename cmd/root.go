@@ -6,6 +6,7 @@ Copyright © 2022 Alexander Kosimovsky a.kosimovsky@gmail.com
 package cmd
 
 import (
+	"bottle-washer/src"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -26,8 +27,6 @@ to quickly create a Cobra application.`,
 	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
-var CfgFile *string
-
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
@@ -42,13 +41,10 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(CfgFile, "config", "hosts.yaml", "config file")
+	rootCmd.PersistentFlags().StringVar(&(src.CfgFile), "config", "hosts.yaml", "config file")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
 
-func ReturnCfg() (cfg *string) {
-	return CfgFile
 }

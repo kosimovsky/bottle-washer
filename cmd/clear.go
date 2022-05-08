@@ -7,9 +7,8 @@ package cmd
 
 import (
 	"bottle-washer/src"
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 // clearCmd represents the clear command
@@ -23,8 +22,26 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("clear called")
-		src.ClearJobs(&CfgFile, args)
+		var ac src.AuthConf
+		ac.ReadAuthFile()
+		configs := ac.ClientConfig()
+		clients := make(chan src.Client)
+		var wg sync.WaitGroup
+		go func() {
+			for _, conf := range configs {
+				clients <- src.InitClientWConfig(conf)
+			}
+			close(clients)
+		}()
+
+		for client := range clients {
+			wg.Add(1)
+			go func(c src.Client) {
+				defer wg.Done()
+				src.ClearJobs(c, args)
+			}(client)
+		}
+		wg.Wait()
 	},
 }
 

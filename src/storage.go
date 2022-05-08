@@ -5,20 +5,19 @@ import (
 	"math"
 )
 
-func Storage(cfg *string, args []string) {
-	newClient := InitClient(cfg)
+func Storage(c Client, args []string) {
+
 	if len(args) > 1 {
 		switch args[1] {
 		case "ctrl":
-			newClient.getControllers()
+			c.getControllers()
 		case "pd":
-			newClient.getPhysDisks()
+			c.getPhysDisks()
 		}
 	} else {
 		err := fmt.Errorf("%s command need subcommand, args count %d", "storage", len(args))
 		fmt.Println(err.Error())
 	}
-	defer newClient.ApiClient.Logout()
 }
 
 func (c *Client) getControllers() {
@@ -32,6 +31,7 @@ func (c *Client) getControllers() {
 	for _, ctrl := range storage {
 		fmt.Println(ctrl.Name, ctrl.Status.State, ctrl.DrivesCount)
 	}
+	defer c.ApiClient.Logout()
 }
 
 func (c *Client) getPhysDisks() {
@@ -47,6 +47,7 @@ func (c *Client) getPhysDisks() {
 			}
 		}
 	}
+	defer c.ApiClient.Logout()
 }
 
 //func listDisks(d redfish.Drive) {

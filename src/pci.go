@@ -4,16 +4,13 @@ import (
 	"fmt"
 )
 
-func Pci(cfg *string, args []string) {
-	newClient := InitClient(cfg)
-
+func Pci(c Client, args []string) {
 	switch args[1] {
 	case "all":
-		newClient.listPCIDevices()
+		c.listPCIDevices()
 	case "endpoints":
-		newClient.pciEndpoints()
+		c.pciEndpoints()
 	}
-	defer newClient.ApiClient.Logout()
 }
 
 func (c *Client) listPCIDevices() {
@@ -22,6 +19,7 @@ func (c *Client) listPCIDevices() {
 	for i, dev := range pciDevices {
 		fmt.Printf("Device %d:\t%v\n", i+1, dev.Name)
 	}
+	defer c.ApiClient.Logout()
 }
 
 func (c *Client) pciEndpoints() {
@@ -30,4 +28,5 @@ func (c *Client) pciEndpoints() {
 	for i, dev := range pciDevices {
 		fmt.Printf("Endpoint %d:\t%v\n", i+1, dev.ODataID)
 	}
+	defer c.ApiClient.Logout()
 }

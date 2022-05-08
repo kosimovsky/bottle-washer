@@ -1,7 +1,6 @@
-package utils
+package src
 
 import (
-	"bottle-washer/src"
 	"fmt"
 	"net"
 	"net/netip"
@@ -121,8 +120,7 @@ func aliveToArray(alives []alive) []netip.Addr {
 	return ret
 }
 
-func Check(cfg *string, args []string) {
-	newClient := src.InitClient(cfg)
+func Check(c Client, args []string) {
 	if len(args) > 1 {
 		switch args[1] {
 		case "cidr":
@@ -136,7 +134,7 @@ func Check(cfg *string, args []string) {
 		err := fmt.Errorf("%s command need subcommand, args count %d", "connect", len(args))
 		fmt.Println(err.Error())
 	}
-	defer newClient.ApiClient.Logout()
+	defer c.ApiClient.Logout()
 }
 
 func printAddr(ar []netip.Addr) {

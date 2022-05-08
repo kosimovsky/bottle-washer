@@ -5,8 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"bottle-washer/utils"
+	"bottle-washer/src"
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 // checkCmd represents the check command
@@ -21,7 +22,27 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Check(&CfgFile, args)
+		var ac src.AuthConf
+		ac.ReadAuthFile()
+		configs := ac.ClientConfig()
+		clients := make(chan src.Client)
+		var wg sync.WaitGroup
+		go func() {
+			for _, conf := range configs {
+				clients <- src.InitClientWConfig(conf)
+			}
+			close(clients)
+		}()
+
+		for client := range clients {
+			wg.Add(1)
+			go func(c src.Client) {
+				defer wg.Done()
+				src.Check(c, args)
+			}(client)
+		}
+		wg.Wait()
+
 	},
 }
 

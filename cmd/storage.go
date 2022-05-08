@@ -7,6 +7,7 @@ package cmd
 import (
 	"bottle-washer/src"
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 // storageCmd represents the storage command
@@ -18,8 +19,26 @@ storage get ctrl	-- to get controllers
 storage get pd		-- to get physical disks`,
 	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		//fmt.Println("storage called")
-		src.Storage(&CfgFile, args)
+		var ac src.AuthConf
+		ac.ReadAuthFile()
+		configs := ac.ClientConfig()
+		clients := make(chan src.Client)
+		var wg sync.WaitGroup
+		go func() {
+			for _, conf := range configs {
+				clients <- src.InitClientWConfig(conf)
+			}
+			close(clients)
+		}()
+
+		for client := range clients {
+			wg.Add(1)
+			go func(c src.Client) {
+				defer wg.Done()
+				src.Storage(c, args)
+			}(client)
+		}
+		wg.Wait()
 	},
 }
 
