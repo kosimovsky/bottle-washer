@@ -1,13 +1,15 @@
+// Package cmd
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 Alexander Kosimovsky a.kosimovsky@gmail.com
 
 */
 package cmd
 
 import (
 	"bottle-washer/src"
-	"github.com/spf13/cobra"
 	"sync"
+
+	"github.com/spf13/cobra"
 )
 
 // checkCmd represents the check command
@@ -42,7 +44,6 @@ to quickly create a Cobra application.`,
 			}(client)
 		}
 		wg.Wait()
-
 	},
 }
 
